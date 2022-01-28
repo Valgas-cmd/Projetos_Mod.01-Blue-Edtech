@@ -1,3 +1,4 @@
+console.clear()
 const prompt = require('prompt-sync')();
 
 function getRandomIntIncluso(min, max) {
@@ -62,10 +63,11 @@ let resp_user, resp_pc, contVitoriasUser = 0, contVitoriasPc = 0;
 
 while(resRodada == 'S')
 {
+    console.clear()
     numRodadas = +prompt('Informe a quantidade de rodadas que vc quer fazer: ');
     for(let i = 1; i <= numRodadas; i++)
     {
-        console.log(`Rodada ${i}:`);
+        console.log(`\nRodada ${i}:`);
         resp_user = verificaRespUser(+prompt('Escolha 0 para Pedra, 1 para Papel e 2 para tesoura. Sua escolha: '));
         console.log('\x1b[33m%s\x1b[0m', jogadas[resp_user]);
         resp_pc = getRandomIntIncluso(0,2);
