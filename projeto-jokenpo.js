@@ -5,7 +5,7 @@ function getRandomIntIncluso(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+}
 
 function verificaRespUser(resp)
 {
@@ -53,7 +53,15 @@ jogadas.push(`
 ---.__(___)
 `)
 
-console.log('\x1b[35m%s\x1b[0m','Bem vindo(a) ao Jokenpô virtual:\n')
+console.log('\x1b[35m%s\x1b[0m',`
+━━┏┓━━━━┏┓━━━━━━━━━━━━━━━━━━━━━━┏┓━━┏┓━━━━━┏┓━━━━━━━━━━━━━━
+━━┃┃━━━━┃┃━━━━━━━━━━━━━━━━━━━━━━┃┗┓┏┛┃━━━━━┃┃━━━━━━━━━━━━━━
+━━┃┃┏━━┓┃┃┏┓┏━━┓┏━┓━┏━━┓┏━━┓━━━━┗┓┃┃┏┛┏━━┓━┃┃━┏━━┓┏━━┓━┏━━┓
+┏┓┃┃┃┏┓┃┃┗┛┛┃┏┓┃┃┏┓┓┃┏┓┃┃┏┓┃━━━━━┃┗┛┃━┗━┓┃━┃┃━┃┏┓┃┗━┓┃━┃━━┫
+┃┗┛┃┃┗┛┃┃┏┓┓┃┃━┫┃┃┃┃┃┗┛┃┃┗┛┃━━━━━┗┓┏┛━┃┗┛┗┓┃┗┓┃┗┛┃┃┗┛┗┓┣━━┃
+┗━━┛┗━━┛┗┛┗┛┗━━┛┗┛┗┛┃┏━┛┗━━┛━━━━━━┗┛━━┗━━━┛┗━┛┗━┓┃┗━━━┛┗━━┛
+━━━━━━━━━━━━━━━━━━━━┃┃━━━━━━━━━━━━━━━━━━━━━━━━┏━┛┃━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━┗┛━━━━━━━━━━━━━━━━━━━━━━━━┗━━┛━━━━━━━━━`)
 console.log('\x1b[35m%s\x1b[0m','REGRAS:\nPedra ganha da tesoura, mas perde para o papel.\nTesoura ganha do papel, mas perde para a pedra.\nPapel ganha da pedra, mas perde para a tesoura.');
 console.log();
 
@@ -91,4 +99,4 @@ while(resRodada == 'S')
     console.log()
     resRodada = verificaRespRodada(prompt('Deseja jogar novamente[S/N]: '));
 }
-console.log('Fim');
+console.log('Fim. Obrigado por jogar');
