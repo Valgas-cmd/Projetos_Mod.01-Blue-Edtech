@@ -55,12 +55,23 @@ elevação, um ponto de observação que o ajudará a identificar melhor o terre
 cajado de seu mestre emanando de dentro do lugar. O objetivo está definido, mas o caminho não.
 À sua frente há três rotas para seguir viagem. Deverá escolher um deles.
 1 – Labirinto: à noroeste, uma mata densa com muitas ramificações, porém abundante em recursos.
-2 – Mina Abandonada: ao norte, uma fenda menor no chão, próxima a sua localização. Um túnel escavado por anões à procura de riquezas, cujo interesse construiu um caminho que leva direto à Caverna de Ogsmar.
+2 – Mina Abandonada: ao norte, uma fenda menor no chão, próxima a sua localização. Um túnel escavado por anões à procura de riquezas,
+cujo interesse construiu um caminho que leva direto à Caverna de Ogsmar.
 Que tesouros o lugar pode resguardar?
 3 – A Montanha: à nordeste, um caminho perigoso, porém prático. Aventurando-se pelas altas colinas e montes você pode evitar as matas e,
 com sorte, atingir mais rápido seu objetivo. O que os céus reservam para os que nada temem?
 `,
-,
+
+[`
+Kristan avança em direção ao labirinto. Próximo a sua entrada, sua passagem é impedida por uma Píton gigante. Ela agressivamente parte em
+sua direção.
+`,
+`Kristan avança em direção a mina abandonada. Próximo a sua entrada, sua passagem é impedida por um Goblin gigante. Ele agressivamente parte
+em sua direção.
+`,
+`Kristan avança em sua subida pela montanha, mas sem se distanciar muito do seu objetivo, um Troll de Gelo aparece. Ele agressivamente parte em 
+sua direção`
+]
 ]
 
 let icons = {
@@ -115,16 +126,16 @@ let jogador = {
         }
     },
 
-    perdeVida: function(dano){
-        this.life -= dano
+    perdeVida: function(){
+        this.life -= 1;
     },
 
     perdeMana: function(custoHF){
         this.mana -= custoHF;
     },
     
-    senteFome: function(hora){
-        this.fome -= hora * 5;
+    senteFome: function(){
+        this.fome -= 1;
     },
 
     mostraAtt: function() {
@@ -155,7 +166,7 @@ let jogador = {
         let value = this.inventario.find(element => element.objeto == item)
         let position = this.inventario.indexOf(value)
         if(position >= 0) {
-            this.inventario.splice(value, 1)
+            this.inventario.splice(position, 1)
         }
         else {console.log('o item informado não existe no inventário')}
     },
@@ -221,21 +232,17 @@ let jogador = {
         console.log(color.roxo, '-------------------------\n');
     },
     
-    criar: function(pocao){
+    criar: function(pocao)
+    {
         if(pocao == 'pocao explosiva') {
             ingredientes = ['polvora negra', 'gordura de troll'];
             let cont = 0;
             for(let i of ingredientes)
             {
-                if(identInventario(i) < 0) {
-                    console.log('Não foi possível criar a poção, pois não tem os itens necessários.')
-                    break;
+                if(identInventario(i) >= 0) {
+                    this.usarItem(i);
+                    cont++;
                 }
-                else {
-                    this.usarItem[i];
-                    console.log(i)
-                }
-                cont++;
             }
             if(cont == 2) {this.addInventario(pocao, 1);}
         }
@@ -244,9 +251,123 @@ let jogador = {
         else {
             console.log(color.verde, `'${pocao}' não existe`);
         }
+    },
+
+    combate: 
+    {
+        piton: function(){
+            let vida = 5, acao;
+            acao = prompt('começar luta?[s/n]: ');
+            if(acao == 's')
+            {
+                while(vida > 0)
+                {
+                    console.clear();
+                    if(acao == 'fireball')
+                    {
+                        vida -= 3;
+                        if(vida <= 0)
+                        {
+                            console.log(color.vermelho, 'Piton morreu')
+                            break;
+                        }
+                        else {console.log(color.vermelho, 'Piton foi atacada. Ela ataca de volta.');}
+                        jogador.life--;
+                        console.log('Voce perdeu 1 coracao');
+                    }
+                    else if(acao == 'usar comida') {jogador.usarItem('comida');}
+                    console.log(`\nPiton ${icons.vida[vida]}`);
+                    jogador.mostraAtt();
+                    acao = prompt('> ');
+                    if(jogador.life <= 0)
+                    {
+                        console.log('Jogador morreu. Fim de jogo');
+                        return 0;
+                    }
+                }
+                console.log('\nApós morrer, o monstro deixou drops.');
+                jogador.addInventario('chave de piton', 1);
+                jogador.addInventario('erva ardente', 1);
+                jogador.addInventario('toxina negra', 1);
+            }
+        },
+        goblin: function(){
+            let vida = 5, acao;
+            acao = prompt('começar luta?[s/n]: ');
+            if(acao = 's')
+            {
+                while(vida > 0)
+                {
+                    console.clear();
+                    if(acao == 'fireball')
+                    {
+                        vida -= 3;
+                        if(vida <= 0)
+                        {
+                            console.log(color.vermelho, 'Goblin morreu')
+                            break;
+                        }
+                        else {console.log(color.vermelho, 'Goblin foi atacado. Ele ataca de volta.');}
+                        jogador.life--;
+                        console.log('Voce perdeu 1 coracao');
+
+                    }
+                    else if(acao == 'usar comida') {jogador.usarItem('comida');}
+                    console.log(`\Goblin ${icons.vida[vida]}`);
+                    jogador.mostraAtt();
+                    acao = prompt('> ');
+                    if(jogador.life <= 0)
+                    {
+                        console.log('Jogador morreu. Fim de jogo');
+                        return 0;
+                    }
+                }
+                console.log('\nApós morrer, o monstro deixou drops.');
+                jogador.addInventario('chave de goblin', 1);
+                jogador.addInventario('jinsem', 1);
+                jogador.addInventario('erva de gelo', 1);
+            }
+        },
+        troll: function(){
+            let vida = 5, acao;
+            acao = prompt('começar luta?[s/n]: ');
+            if(acao == 's')
+            {
+                while(vida > 0)
+                {
+                    console.clear();
+                    if(acao == 'fireball')
+                    {
+                        vida -= 3;
+                        if(vida <= 0)
+                        {
+                            console.log(color.vermelho, 'Troll morreu')
+                            break;
+                        }
+                        else {console.log(color.vermelho, 'Troll foi atacado. Ele ataca de volta.');}
+                        jogador.life--;
+                        console.log('Voce perdeu 1 coracao');
+
+                    }
+                    else if(acao == 'usar comida') {jogador.usarItem('comida');}
+                    console.log(`\Troll ${icons.vida[vida]}`);
+                    jogador.mostraAtt();
+                    acao = prompt('> ');
+                    if(jogador.life <= 0)
+                    {
+                        console.log('Jogador morreu. Fim de jogo');
+                        return 0;
+                    }
+                }
+                console.log('\nApós morrer, o monstro deixou drops.');
+                jogador.addInventario('gordura de troll', 1);
+                jogador.addInventario('polvora negra', 1);
+                jogador.addInventario('comida', 5);
+            }
+        }
     }
 }
-
+let tempo = 5;
 function stage1(){
     let resp;
     for(let i = 0; i < texto_stage1.length;)
@@ -254,15 +375,16 @@ function stage1(){
         console.clear();
         if(i == 7)
         {
-            jogador.addEquipamento('cajado do aprendiz', 'dano2');
+            jogador.addEquipamento('cajado do aprendiz', '2');
             jogador.addEquipamento('grimorio de feiticos', 'livro');
         }
 
-        if(resp == resp_stage1[i]) {i++}
+        if(resp == resp_stage1[i]) {i++, tempo++}
         else if(resp == 'inventario') {jogador.mostraInventario()}
         else if(resp == 'equipo') {jogador.mostraEquipo()}
         else if(resp == 'ir para saida'){
             i++;
+            tempo++
             console.log(texto_stage1[i]);
             break;
         }
@@ -272,29 +394,33 @@ function stage1(){
             jogador.addInventario('pocao de mana', 1);
             jogador.addInventario('comida', 5);
             i+=2;
+            tempo++;
             console.log(texto_stage1[i]);
             break;
         }
+        if(tempo <= 11) {console.log(color.amarelo, `${tempo} AM`);}
+        else if(tempo > 12) {console.log(color.amarelo, `${tempo % 12} PM`);}
+        else {console.log(color.amarelo, '12 PM');}
         jogador.mostraAtt();
         console.log(texto_stage1[i])
         resp = prompt('> ')
     }
 }
-
 function stage2()
 {
     console.clear();
     let resp;
-    let isNotFinal = true, i = 0;
+    let isNotFinal = true; 
+    let i = 0;
     while(isNotFinal)
     {
         console.clear();
         if(resp == 'inventario') {jogador.mostraInventario();}
         else if(resp == 'equipo') {jogador.mostraEquipo();}
-        else if(resp == 'usar comida') {jogador.usarItem['comida'];}
-        else if(resp == 'usar pocao mana') {jogador.usarItem['pocao mana'];}
-        else if(resp == 'usar pocao cura') {jogador.usarItem['pocao cura'];}
-        else if(resp == 'usar pocao explosiva') {jogador.usarItem['pocao explosiva'];}
+        else if(resp == 'usar comida') {jogador.usarItem('comida');}
+        else if(resp == 'usar pocao mana') {jogador.usarItem('pocao mana');}
+        else if(resp == 'usar pocao cura') {jogador.usarItem('pocao cura');}
+        else if(resp == 'usar pocao explosiva') {jogador.usarItem('pocao explosiva');}
         else if(resp == 'potion')
         {
             color.insereCor('\n------------------ Potions ----------------------', 3);
@@ -306,12 +432,31 @@ function stage2()
         else if (resp == 'criar pocao explosiva') {jogador.criar('pocao explosiva');}
         else if (resp == 'criar pocao mana') {}
         else if (resp == 'criar pocao veneno') {}
-        else if(resp == 'olhar') {i++}
+        else if(resp == 'olhar') {i++, tempo++}
+        else if(resp >= 1 && resp <= 3) {
+            i++;
+            tempo++;
+            console.log(texto_stage2[i][resp-1]);
+            if(resp == '1') {jogador.combate.piton();}
+            else if(resp == '2') {jogador.combate.goblin();}
+            else {jogador.combate.troll()}
+            break;
+        }
+        // tempo
+        if(tempo <= 11) {console.log(color.amarelo, `${tempo} AM`);}
+        else if(tempo > 12) {console.log(color.amarelo, `${tempo % 12} PM`);}
+        else {console.log(color.amarelo, '12 PM');}
         jogador.mostraAtt()
-        texto_stage2[i];
-        resp = prompt('> ');
+        
+        if (resp <= 3 && resp >= 1){
+            console.log(texto_stage2[i][resp-1]);
 
         }
+        else {console.log(texto_stage2[i]);}
+        resp = prompt('> ');
+        
+    }
+    console.log('\n\nContinua...');
 }
 
 let logo = `
@@ -333,8 +478,8 @@ if(respUser == 1)
     stage1();
     respUser = prompt('Pronto para continuar?[s/n]: ');
     if (respUser == 's') {stage2()}
-    else {console.log('fim de jogo');}
+    else {return 0;}
 }
 else if(respUser == 2)
-{}
+{console.log('regras estão no doc');}
 else if(respUser == 3) {return 0;}
